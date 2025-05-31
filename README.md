@@ -1,4 +1,4 @@
-# My Project Title
+# Understanding Power Outage Drivers Across the U.S.
 
 by Janice Rincon
 
