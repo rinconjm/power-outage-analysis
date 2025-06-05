@@ -151,6 +151,7 @@ Other causes (such as equipment failure, fuel supply emergencies, and system ope
 ### Interesting Aggregates
 
 <!-- TODO -->
+
 |   OUTAGE.DURATION.HRS |   DEMAND.LOSS.MW |   CUSTOMERS.AFFECTED |
 |----------------------:|-----------------:|---------------------:|
 |                45.019 |          477.482 |             126810   |
@@ -230,20 +231,36 @@ The empirical distribution of TVD values across 500 permutations is shown below:
 ---
 
 ## Hypothesis Testing
+To better understand how the cause of an outage relates to its severity, we compare the average duration of power outages caused by severe weather versus those caused by equipment failure. This comparison helps identify whether weather-related events tend to be more disruptive in terms of recovery time. 
+
+- **Null Hypothesis:** On average, the duration of power outages is the same for severe weather and equipment failure.
+- **Alternative Hypothesis:** The average duration of power outages caused by severe weather is greater than the average duration of outages caused by equipment failure. 
+- **Test Statistic:** Difference of Group Means
+
+#### Results
+A permutation test with 10,000 simulations was conducted in order to generate an empirical distribution of the group mean differences under the null hypothesis. 
+The resulting **p-value was 0.0001**, which indicates strong evidence against the null hypothesis. At a significance level of α = 0.05, we reject the null hypothesis. There is a statistically significant difference in average outage duration between severe weather and equipment failure outages. The evidence suggests that on average, power outages caused by severe weather tend to last longer than those caused  by equipment failure. 
 
 <iframe
-  src="assets/"
+  src="assets/mean_diff_dist.html"
   width="800"
   height="500"
   frameborder="0"
 ></iframe>
+
 ---
 
 ## Problem Identification
 
+My model will aims to predict the duration of a major power outage, making this a regression problem rather than a classification task. The target variable, `OUTAGE.DURATION.HRS` is continuous and represents the total number of hours an outage lasted.
+To evaluate this model, I use both **Root Mean Squared Error(RMSE)** and **R^2** score. RMSE measures the average prediction errors in hours, while R-squared measures how well the model explains the variance in outage duration. 
+At prediction time, we assume access to information such as the state, climate region, NERC region, anomaly level, month, hour, total customers affected, and cause category. These features provide a picture of the conditions surrounding each outage.
 
 ---
 ## Baseline Model
+
+The model is a Random Forest Reggressor which uses the features 
+
 
 
 ---
