@@ -78,7 +78,7 @@ Below are the first few rows of the processed dataset:
 <iframe
   src="assets/outage_duration_dist.html"
   width="800"
-  height="600"
+  height="500"
   frameborder="0"
 ></iframe>
 
@@ -89,7 +89,7 @@ This suggests that while most power outages are relatively short, the average an
 <iframe
   src="assets/outages_per_month_dist.html"
   width="800"
-  height="600"
+  height="500"
   frameborder="0"
 ></iframe>
 
@@ -100,10 +100,16 @@ In contrast, November and September had the fewest outages, with under 100 incid
 <table>
   <tr>
     <td>
-      <iframe src="assets/outage_count_map.html" width="450" height="300" style="border:none;"></iframe>
+      <iframe src="assets/outage_count_map.html" 
+      width="450" 
+      height="300" 
+      frameborder="0"></iframe>
     </td>
     <td>
-      <iframe src="assets/avg_duration_map.html" width="450" height="300" style="border:none;"></iframe>
+      <iframe src="assets/avg_duration_map.html" 
+      width="450" 
+      height="300" 
+      frameborder="0"></iframe>
     </td>
   </tr>
   <tr>
@@ -112,15 +118,52 @@ In contrast, November and September had the fewest outages, with under 100 incid
   </tr>
 </table>
 
+The map on the left, **Outage by State** shows that California experienced the highest number of outages. This is likely due to factors such as wildfire risk and population size. Texas, along with parts of the Midwest and the Northeast show a higher outage frequency. However, the South as well as states located in the center of the country reported relatively few major outages, potentially due to lower population density.
+
+The map on the right, **Average Outage Duration by State**, shows that states in the Midwest and Northeast, particularly Michigan and West Virginia, show the longest average durations. Interestingly enough, California shows only moderate average durations, despite having the most reported outages. 
+
 
 #### Cause Analysis
+<iframe
+  src="assets/outages_by_cause_hist.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
+
+This chart shows that **severe weather** was the leading cause of major power outages in the U.S. between 2000 and 2016, accounting for nearly 800 incidents. The second most common cause was **intentional attacks**, with over 400 incidents.
+All other causes occurred significantly less, with less than 130 incidents each.
 
 
 ### Bivariate Analysis
+<iframe
+  src="assets/cause_over_time_line.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
+
+The line chart shows how major power outages in the U.S. varied by cause from 2000 to 2016. Severe weather was the most dominant and consistent cause, continuously increasing from 2003 and 2012, and peaking around 2011. Intentional attacks spiked in 2011, briefly surpassing all other causes before declining, possibly due to isolated high-impact incidents. Before 2010, however, it showed a quantity of 0 perhaps suggesting a lack of recording.  
+
+Other causes (such as equipment failure, fuel supply emergencies, and system operability disruptions) were relatively low and stable. Overall, the chart highlights that natural and intentional disruptions were the primary causes of major outages.
 
 
 ### Interesting Aggregates
 
+<!-- TODO -->
+|   OUTAGE.DURATION.HRS |   DEMAND.LOSS.MW |   CUSTOMERS.AFFECTED |
+|----------------------:|-----------------:|---------------------:|
+|                45.019 |          477.482 |             126810   |
+|                89.201 |          560.406 |             138389   |
+|                49.861 |          537.411 |             121960   |
+|                21.408 |          177.897 |              81420   |
+|                47.435 |          399.087 |             183501   |
+|                36.961 |          761.533 |             180540   |
+|                26.102 |          424.556 |              39028.9 |
+|                27.139 |          651.457 |             194580   |
+|                11.609 |          326     |              47316   |
+
+<!-- TODO DESCRIPTION-->
 
 ---
 
@@ -128,13 +171,72 @@ In contrast, November and September had the fewest outages, with under 100 incid
 
 ### NMAR Analysis
 
-### Missingness Dependency
+<!-- TODO -->
 
+### Missingness Dependency
+In order to test missingness dependency, I will focus on the column of `DEMAND.LOSS.MW` which has a significant/non-trivial missingness. This will be tested against the columns `CAUSE.CATEGORY` and `HOUR`.
+`
+#### Dependency on `CAUSE.CATEGORY`
+The distribution of `CAUSE.CATEGORY` is plotted when `DEMAND.LOSS.MW` is *missing* and *not missing*.
+
+- **Null Hypothesis:** There is no change in the distributions of `CAUSE.CATEGORY` when `DEMAND.LOSS.MW` is *missing* and *not missing*.
+- **Alternative Hypothesis:** The distributions of `CAUSE.CATEGORY` when `DEMAND.LOSS.MW` is *missing* and *not missing* are different.
+- **Test Stat:** Total Variation Distance (TVD).
+
+<iframe
+  src="assets/cause_by_missing_MW.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
+
+The observed TVD was **0.18**, with a p-value of **0.0**. Given this result, we reject the null hypothesis in favor of the alternative. This suggests that the mechanism behind missing values in `DEMAND.LOSS.MW` is not random, and is likely dependent on `CAUSE.CATEGORY`.
+
+The empirical distribution of TVD values across 500 permutations is shown below:
+
+<iframe
+  src="assets/tvd_dist_cause_cat.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
+
+
+
+#### Dependency on `HOUR`
+The distribution of `HOUR` is plotted when `DEMAND.LOSS.MW` is missing and not missing.
+
+- **Null Hypothesis:** There is no change in the distributions of `HOUR` when `DEMAND.LOSS.MW` is *missing* and *not missing*.
+- **Alternative Hypothesis:** The distributions of `HOUR` when `DEMAND.LOSS.MW` is *missing* and *not missing* are different.
+- **Test Stat:** Total Variation Distance (TVD).
+
+<iframe
+  src="assets/cause_by_missing_hour.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
+
+The observed TVD was **0.1**, with a p-value of **0.302**. Given this result, we do not reject the null hypothesis in favor of the alternative. This suggests that the distribution of `HOUR` is not significantly different when `DEMAND.LOSS.MW` is missing/not missing. In other words, missingness in `DEMAND.LOSS.MW` does not appear to depend on the time of day when the outage occurred.
+
+The empirical distribution of TVD values across 500 permutations is shown below:
+
+<iframe
+  src="assets/tvd_dist_cause_hour.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
 ---
 
 ## Hypothesis Testing
 
-
+<iframe
+  src="assets/"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
 ---
 
 ## Problem Identification
