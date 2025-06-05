@@ -259,23 +259,20 @@ At prediction time, we assume access to information such as the state, climate r
 ---
 ## Baseline Model
 
-<!-- Describe your model and state the features in your model, including how many are quantitative, ordinal, and nominal, and how you performed any necessary encodings. Report the performance of your model and whether or not you believe your current model is “good” and why. -->
+The base regression model is a Random Forest Reggressor which uses the features `CLIMATE.REGION`, `CAUSE.CATEGORY`, and `MONTH` in order to predict the length of a power outage.
+- `CLIMATE.REGION` (nominal) was selected because it provides geographic context which may reflect weather patterns and regional infrastructure.
+- `CAUSE.CATEGORY`(nominal) was included as this was the underlying reason for the power outage, which is likely to affect duration.  
+- `MONTH` (ordinal) was chosen to capture seasonal pattern changes which may affect outage duration, such as summer heatwaves or winter snow storms.
 
-The base regression model is a Random Forest Reggressor which uses the features climate region, cause category, and month in order to predict the length of a power outage.
-- `CLIMATE.REGION` (nominal) was chosen because it provides both geographical information and.. .  
-- `CAUSE.CATEGORY`(nominal) was chosen because... 
-- `MONTH` (ordinal) was chosen because... 
+To prepare the data for modeling, **One Hot Encoding** was applied to the nominal features (`CLIMATE.REGION` and `CAUSE.CATEGORY`) to convert them into machine-readable format. 
 
-The model achieved an R-squared score of **0.21** and a RMSE of **116.35** hours. 
+The model achieved an R-squared score of **0.21** and a RMSE of **116.35** hours. This means the model explains about 21% of the variance in outage duration, with an average error of over 115 hours. 
 
-<!-- Is the model good or bad?  -->
-
-
-
-
-
+While the model does capture some relationship between the features and the target, the low R-squared score and high RMSE shows that it is not very effective. There is significant room for improvement!
+Some features not captured in the current set, such as population, time of day, may provide a more comprehensive "image" of pre-outage zconditions, resulting in better model performance. 
 
 ---
+
 ## Final Model
 
 For the final model, `HOUR`, `CLIMATE.CATEGORY`, `TOTAL.CUSTOMERS`, were added as features.
@@ -294,7 +291,6 @@ With these, the model was able to improve performance and achieve an R-squared s
 
 ---
 ## Fairness Analysis
-<!-- TO DO -->
 In order to the final model for fairness, two groups were created based on the year recorded for the power outage: `2000-2009` and `2010-2016`. 
 "Year" was selected as a metric to create the groups because it was not included as a feature for the model and because it can test if the model generalizes equally well across time. The year 2010 was chosen specifically as there was a spike in the frequency of reports in 2011 as well as the fact that it represents a new decade. The metric used to evaluate fairness will be RMSE. 
 
