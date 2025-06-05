@@ -259,16 +259,44 @@ At prediction time, we assume access to information such as the state, climate r
 ---
 ## Baseline Model
 
-The model is a Random Forest Reggressor which uses the features 
+<!-- Describe your model and state the features in your model, including how many are quantitative, ordinal, and nominal, and how you performed any necessary encodings. Report the performance of your model and whether or not you believe your current model is “good” and why. -->
+
+The base regression model is a Random Forest Reggressor which uses the features climate region, cause category, and month in order to predict the length of a power outage.
+- `CLIMATE.REGION` (nominal) was chosen because it provides both geographical information and.. .  
+- `CAUSE.CATEGORY`(nominal) was chosen because... 
+- `MONTH` (ordinal) was chosen because... 
+
+The model achieved an R-squared score of **0.21** and a RMSE of **116.35** hours. 
+
+Is the model good or bad? 
+
+
+
 
 
 
 ---
 ## Final Model
+<!-- State the features you added and why they are good for the data and prediction task. Note that you can’t simply state “these features improved my accuracy”, since you’d need to choose these features and fit a model before noticing that – instead, talk about why you believe these features improved your model’s performance from the perspective of the data generating process.
+
+Describe the modeling algorithm you chose, the hyperparameters that ended up performing the best, and the method you used to select hyperparameters and your overall model. Describe how your Final Model’s performance is an improvement over your Baseline Model’s performance. -->
+
+For the final model, `HOUR`, `CLIMATE.CATEGORY`, `TOTAL.CUSTOMERS`, were added as features.
+- `HOUR` (Ordinal): During EDA, it was found that there was a higher frequency of power outages during certain times of the day, perhaps due to increased demands on the power grid.
+- `CLIMATE.CATEGORY`(Nominal): This feature provides information on the presence of El Niño/La Niña events for the current year. 
+- `TOTAL.CUSTOMERS` (Quantitative): The total number of customers serviced by the utility in that year. Can provide information on... 
+
+**GridCVSearch** was performed and the best hyperparameters were found to be:
+- max_depth: 20
+- max_features: "sqrt"
+- min_samples_split: 5
+- n_estimators: 100
+
+With these, the model was able to improve performance and achieve an R-squared score of **0.301** and a RMSE of **109.17** hours. 
 
 
 ---
 ## Fairness Analysis
-
+<!-- TO DO -->
 
 ---
