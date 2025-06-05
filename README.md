@@ -268,7 +268,7 @@ The base regression model is a Random Forest Reggressor which uses the features 
 
 The model achieved an R-squared score of **0.21** and a RMSE of **116.35** hours. 
 
-Is the model good or bad? 
+<!-- Is the model good or bad?  -->
 
 
 
@@ -277,9 +277,6 @@ Is the model good or bad?
 
 ---
 ## Final Model
-<!-- State the features you added and why they are good for the data and prediction task. Note that you can’t simply state “these features improved my accuracy”, since you’d need to choose these features and fit a model before noticing that – instead, talk about why you believe these features improved your model’s performance from the perspective of the data generating process.
-
-Describe the modeling algorithm you chose, the hyperparameters that ended up performing the best, and the method you used to select hyperparameters and your overall model. Describe how your Final Model’s performance is an improvement over your Baseline Model’s performance. -->
 
 For the final model, `HOUR`, `CLIMATE.CATEGORY`, `TOTAL.CUSTOMERS`, were added as features.
 - `HOUR` (Ordinal): During EDA, it was found that there was a higher frequency of power outages during certain times of the day, perhaps due to increased demands on the power grid.
@@ -292,11 +289,32 @@ For the final model, `HOUR`, `CLIMATE.CATEGORY`, `TOTAL.CUSTOMERS`, were added a
 - min_samples_split: 5
 - n_estimators: 100
 
-With these, the model was able to improve performance and achieve an R-squared score of **0.301** and a RMSE of **109.17** hours. 
+With these, the model was able to improve performance and achieve an R-squared score of **0.301** and a RMSE of **109.17** hours. Compared to the baseline model, R-squared improved by approximately 43.33% and RMSE lowered  by 6.17 %. 
 
 
 ---
 ## Fairness Analysis
 <!-- TO DO -->
+In order to the final model for fairness, two groups were created based on the year recorded for the power outage: `2000-2009` and `2010-2016`. 
+"Year" was selected as a metric to create the groups because it was not included as a feature for the model and because it can test if the model generalizes equally well across time. The year 2010 was chosen specifically as there was a spike in the frequency of reports in 2011 as well as the fact that it represents a new decade. The metric used to evaluate fairness will be RMSE. 
+
+<iframe
+  src="assets/num_out_per_year.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
+
+- **Null Hypothesis:** There is no difference in the model's performance on the data from 2000-2009 and 2010-2016. Any difference in performance is due to random chance.
+- **Alternative Hypothesis:** There is a difference in the model's performance on the data from 2000-2009 and 2010-2016, suggesting that it does not generalize equally over time. 
+
+A permutation test with 10,000 repetitions was performed. The p-value for this test was found to be **0.8981**, significantly higher than the conventional significance level of α = 0.05. Therefore, we fail to reject the null hypothesis which suggests that the model performs equally for both groups.
+
+<iframe
+  src="assets/abs_rmse_diff_fairness.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
 
 ---
