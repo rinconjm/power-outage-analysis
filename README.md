@@ -189,7 +189,7 @@ The first few rows of the aggregate is shown below:
 
 ### NMAR Analysis
 
-<!-- TODO -->
+Of all the columns that have missing data, the column most likely to be NMAR is `OUTAGE.LOST.MW`. When demand loss is very low, utilities may consider it negligible and choose to not report it. On the other hand, when demand loss is very high, utilities may choose not to report to as to not damage their reputation or for political reasons.
 
 ### Missingness Dependency
 In order to test missingness dependency, I will focus on the column of `DEMAND.LOSS.MW` which has a significant/non-trivial missingness. This will be tested against the columns `CAUSE.CATEGORY` and `HOUR`.
