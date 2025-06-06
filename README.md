@@ -24,7 +24,7 @@ The original dataset includes 1534 rows and 57 columns. For the sake of my analy
 |:------------------------|:----------|
 |`YEAR`                   |The year when a power outage occurred |
 |`MONTH`                  |The month when a power outage occurred |
-|`U.S.-STATE`             |The U.S. state where the outage took place|
+|`U.S._STATE`             |The U.S. state where the outage took place|
 |`NERC.REGION`            |Indicates the North American Electric Reliability Corporation (NERC) region associated with the outage event|
 |`CLIMATE.REGION`         |U.S. climate regions, as defined by the National Centers for Environmental Information, where the power outage took place  |
 |`ANOMALY.LEVEL`          |Indicates the oceanic El Niño/La Niña Index (ONI) value, representing sea surface temperature (SST) anomalies in the  Niño 3.4 region  |
@@ -96,6 +96,16 @@ This suggests that while most power outages are relatively short, the average an
 This bar chart shows that major power outages were most frequent during the summer months, peaking in June and July, with over 180 incidents each. This suggests a seasonal trend, most likely influenced by the increased demand in electricity and weather events (heatwaves, storms, etc.)
 In contrast, November and September had the fewest outages, with under 100 incidents. Overall, outages were most common between June and August which suggests that summer presents a greater risk to infrastructure.  
 
+<iframe
+  src="assets/outages_by_time.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
+
+Interestingly enough, when visualizing the distribution of outages based on the time of day, it was found that the majority of outages occurred between 1pm and 4pm, peaking around 3pm. Morning to early evening (7am-6pm) consistently shows high outage frequency, indicating that most outages occur during active business hours, not overnight. 
+
+
 #### Geographic Patterns
 <table>
   <tr>
@@ -147,24 +157,31 @@ The line chart shows how major power outages in the U.S. varied by cause from 20
 
 Other causes (such as equipment failure, fuel supply emergencies, and system operability disruptions) were relatively low and stable. Overall, the chart highlights that natural and intentional disruptions were the primary causes of major outages.
 
+<iframe
+  src="assets/outage_dur_by_cust_affected.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
+
+The scatter plot visualizes the relationship between power outage duration (in hours) and the number of customers affected. Most outages last less than 500 hours, and the majority of customers affected is 500k. Interestingly enough, there does not appear to be a clear linear correlation between the two variables, suggesting that longer outages do not necessarily affect more customers. 
+
 
 ### Interesting Aggregates
 
-<!-- TODO -->
+The table below shows the average outage duration by hour of day the outage occurred and cause category. Severe Weather appears to have the most even distribution, with no severe spikes. In contrast, there appear to be large values for equipment failure and fuel supply emergencies at odd hours. This suggests that the cause of an outage may influence not just how long it lasts, but when it tends to occur.
 
-|   OUTAGE.DURATION.HRS |   DEMAND.LOSS.MW |   CUSTOMERS.AFFECTED |
-|----------------------:|-----------------:|---------------------:|
-|                45.019 |          477.482 |             126810   |
-|                89.201 |          560.406 |             138389   |
-|                49.861 |          537.411 |             121960   |
-|                21.408 |          177.897 |              81420   |
-|                47.435 |          399.087 |             183501   |
-|                36.961 |          761.533 |             180540   |
-|                26.102 |          424.556 |              39028.9 |
-|                27.139 |          651.457 |             194580   |
-|                11.609 |          326     |              47316   |
+The first few rows of the aggregate is shown below:
 
-<!-- TODO DESCRIPTION-->
+|   HOUR |   equipment failure |   fuel supply emergency |   intentional attack |   islanding |   public appeal |   severe weather |   system operability disruption |
+|-------:|--------------------:|------------------------:|---------------------:|------------:|----------------:|-----------------:|--------------------------------:|
+|      0 |               14.75 |                 1810.88 |                 4.5  |        3.25 |             nan |            71.99 |                           53    |
+|      1 |              nan    |                    0.02 |                12.07 |       17.25 |             nan |           102.05 |                           19.62 |
+|      2 |              nan    |                  nan    |                21.67 |        3.22 |             nan |            47.81 |                            5.59 |
+|      3 |                6.66 |                  nan    |                 6.34 |        0.58 |             nan |            58.28 |                           15.52 |
+|      4 |              nan    |                   72    |                14.59 |        0.83 |             nan |            80.5  |                           13.6  |
+|      5 |               11.95 |                   48    |                17.08 |        0.25 |             nan |            62.98 |                           28.28 |
+|      6 |              445.28 |                  nan    |                 3.84 |      nan    |              78 |           106.3  |                            9.13 |
 
 ---
 
@@ -176,7 +193,7 @@ Other causes (such as equipment failure, fuel supply emergencies, and system ope
 
 ### Missingness Dependency
 In order to test missingness dependency, I will focus on the column of `DEMAND.LOSS.MW` which has a significant/non-trivial missingness. This will be tested against the columns `CAUSE.CATEGORY` and `HOUR`.
-`
+
 #### Dependency on `CAUSE.CATEGORY`
 The distribution of `CAUSE.CATEGORY` is plotted when `DEMAND.LOSS.MW` is *missing* and *not missing*.
 
@@ -290,6 +307,7 @@ With these, the model was able to improve performance and achieve an R-squared s
 
 
 ---
+
 ## Fairness Analysis
 In order to the final model for fairness, two groups were created based on the year recorded for the power outage: `2000-2009` and `2010-2016`. 
 "Year" was selected as a metric to create the groups because it was not included as a feature for the model and because it can test if the model generalizes equally well across time. The year 2010 was chosen specifically as there was a spike in the frequency of reports in 2011 as well as the fact that it represents a new decade. The metric used to evaluate fairness will be RMSE. 
