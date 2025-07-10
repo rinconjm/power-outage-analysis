@@ -295,7 +295,7 @@ Some features not captured in the current set, such as population, time of day, 
 For the final model, `HOUR`, `CLIMATE.CATEGORY`, `TOTAL.CUSTOMERS`, were added as features.
 - `HOUR` (Ordinal): During EDA, it was found that there was a higher frequency of power outages during certain times of the day, perhaps due to increased demands on the power grid.
 - `CLIMATE.CATEGORY`(Nominal): This feature provides information on the presence of El Niño/La Niña events for the current year. 
-- `TOTAL.CUSTOMERS` (Quantitative): The total number of customers serviced by the utility in that year. Can provide information on... 
+- `TOTAL.CUSTOMERS` (Quantitative): The total number of customers serviced by the utility in that year.
 
 **GridCVSearch** was performed and the best hyperparameters were found to be:
 - max_depth: 20
@@ -303,7 +303,7 @@ For the final model, `HOUR`, `CLIMATE.CATEGORY`, `TOTAL.CUSTOMERS`, were added a
 - min_samples_split: 5
 - n_estimators: 100
 
-With these, the model was able to improve performance and achieve an R-squared score of **0.301** and a RMSE of **109.17** hours. Compared to the baseline model, R-squared improved by approximately 43.33% and RMSE lowered  by 6.17 %. 
+With these, the model was able to improve performance and achieve an R-squared score of **0.301** and a RMSE of **109.17** hours. Compared to the baseline model, R-squared improved by approximately 43.33% and RMSE lowered  by 6.17%. 
 
 
 ---
